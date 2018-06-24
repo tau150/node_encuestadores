@@ -1,6 +1,6 @@
-"use strict";
+'use strict';
 
-const faker = require("faker");
+const faker = require('faker');
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -25,25 +25,28 @@ module.exports = {
           email: faker.internet.email(),
           password: faker.internet.password(),
           role_id: 1,
+          img: faker.image.avatar(),
           createdAt: new Date(),
-          updatedAt: new Date()
+          updatedAt: new Date(),
+          deletedAt: null,
         });
       }
 
       users.push({
-        name: "santi",
-        surname: "nunez",
-        email: "tau150@hotmail.com",
-        password: "123",
+        name: 'santi',
+        surname: 'nunez',
+        email: 'tau150@hotmail.com',
+        password: '123',
         role_id: 1,
+        img: faker.image.avatar(),
         createdAt: new Date(),
-        updatedAt: new Date()
+        updatedAt: new Date(),
       });
     };
 
     seeder();
 
-    return queryInterface.bulkInsert("Users", users, {});
+    return queryInterface.bulkInsert('Users', users, {});
   },
 
   down: (queryInterface, Sequelize) => {
@@ -55,6 +58,6 @@ module.exports = {
       return queryInterface.bulkDelete('Person', null, {});
     */
 
-    return queryInterface.bulkDelete("Users", null, {});
-  }
+    return queryInterface.bulkDelete('Users', null, {});
+  },
 };

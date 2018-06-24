@@ -1,27 +1,31 @@
-"use strict";
+'use strict';
 module.exports = (sequelize, DataTypes) => {
   var Role = sequelize.define(
-    "Role",
+    'Role',
     {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: DataTypes.INTEGER
+        type: DataTypes.INTEGER,
       },
       name: DataTypes.STRING,
       description: DataTypes.TEXT,
 
       createdAt: {
         allowNull: false,
-        type: DataTypes.DATE
+        type: DataTypes.DATE,
       },
       updatedAt: {
         allowNull: false,
-        type: DataTypes.DATE
-      }
+        type: DataTypes.DATE,
+      },
+      deletedAt: {
+        allowNull: true,
+        type: DataTypes.DATE,
+      },
     },
-    {}
+    { paranoid: true }
   );
   Role.associate = function(models) {
     // associations can be defined here

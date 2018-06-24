@@ -1,59 +1,78 @@
-"use strict";
+'use strict';
 
 module.exports = (sequelize, DataTypes) => {
   var User = sequelize.define(
-    "User",
+    'User',
     {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: DataTypes.INTEGER
+        type: DataTypes.INTEGER,
       },
       name: {
         require: true,
-        type: DataTypes.STRING
+        type: DataTypes.STRING,
+        set(val) {
+          this.setDataValue('name', val[0].toUpperCase() + val.slice(1));
+        },
       },
       surname: {
         require: true,
-        type: DataTypes.STRING
+        type: DataTypes.STRING,
+        set(val) {
+          this.setDataValue('surname', val[0].toUpperCase() + val.slice(1));
+        },
       },
       email: {
         type: DataTypes.STRING,
         unique: true,
-        require: true,
+        allowNull: false,
+        set(val) {
+          this.setDataValue('email', val.trim());
+        },
         validate: {
-          isEmail: true
-        }
+          isEmail: true,
+        },
       },
       password: {
-        require: true,
-        type: DataTypes.STRING
+        allowNull: false,
+        type: DataTypes.STRING,
+        set(val) {
+          this.setDataValue('password', val.trim());
+        },
       },
       role_id: {
         type: DataTypes.INTEGER,
         references: {
           model: {
-            tableName: "Roles"
+            tableName: 'Roles',
           },
-          key: "id"
-        }
+          key: 'id',
+        },
+      },
+      img: {
+        type: DataTypes.STRING,
       },
       createdAt: {
         allowNull: false,
-        type: DataTypes.DATE
+        type: DataTypes.DATE,
       },
       updatedAt: {
         allowNull: false,
-        type: DataTypes.DATE
-      }
+        type: DataTypes.DATE,
+      },
+      deletedAt: {
+        allowNull: true,
+        type: DataTypes.DATE,
+      },
     },
-    {}
+    { paranoid: true }
   );
   User.associate = function(models) {
     // associations can be defined here
     User.belongsTo(models.Role, {
-      foreignKey: "role_id"
+      foreignKey: 'role_id',
     });
   };
   return User;
