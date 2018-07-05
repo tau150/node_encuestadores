@@ -37,7 +37,7 @@ router.post("/login", function(req, res, next) {
         },
         // process.env.TOKEN_SEED,
 
-        process.env.SEED_TOKEN, /// VER DE CAMBIAR ESTO POR UNA VARIABLE DE ENTORNO !!!
+        "31743011.9013.TAU150", /// VER DE CAMBIAR ESTO POR UNA VARIABLE DE ENTORNO !!!
         { expiresIn: 3600000 }
       );
 

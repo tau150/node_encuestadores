@@ -1,44 +1,44 @@
-var express = require('express');
+var express = require("express");
 var router = express.Router();
-const bcrypt = require('bcrypt');
-const { User, Role } = require('../models/index');
-const { tokenVerification } = require('../middlewares/auth');
+const bcrypt = require("bcrypt");
+const { User, Role } = require("../models/index");
+const { tokenVerification } = require("../middlewares/auth");
 
 /* GET users listing. */
-router.get('/', tokenVerification, (req, res, next) => {
+router.get("/", tokenVerification, (req, res, next) => {
   return res.json({
-    usuario: req.user,
+    usuario: req.user
   });
   User.findAll({
-    attributes: ['id', 'name', 'surname', 'email'],
-    include: [{ model: Role }],
+    attributes: ["id", "name", "surname", "email"],
+    include: [{ model: Role }]
   })
     .then(users => {
       res.json({
         ok: true,
-        users,
+        users
       });
     })
     .catch(err => {
       res.status(400).send({
         ok: false,
-        err: 'hubo error',
+        err: "hubo error"
       });
     });
 });
 
 /* POST user. */
-router.post('/', (req, res, next) => {
+router.post("/", (req, res, next) => {
   let body = req.body;
 
-  let password = bcrypt.hashSync('123', 10);
+  let password = bcrypt.hashSync("123", 10);
 
   const user = User.build({
     name: req.body.name,
     surname: req.body.surname,
     email: req.body.email,
     password: password,
-    role_id: req.body.role_id,
+    role_id: req.body.role_id
   });
 
   user
@@ -47,24 +47,24 @@ router.post('/', (req, res, next) => {
       delete user.dataValues.password;
       res.json({
         ok: true,
-        user,
+        user
       });
     })
     .catch(err => {
       res.status(404).json({
         ok: false,
-        error: err,
+        error: err
       });
     });
 });
 
 /* PUT user. */
-router.put('/:id', (req, res, next) => {
+router.put("/:id", (req, res, next) => {
   User.update(
     {
       name: req.body.name,
       surname: req.body.surname,
-      role_id: req.body.role_id,
+      role_id: req.body.role_id
     },
     { returning: true, where: { id: req.params.id } }
   )
@@ -72,32 +72,51 @@ router.put('/:id', (req, res, next) => {
       User.findById(req.params.id).then(updatedUser => {
         res.json({
           ok: true,
-          user: updatedUser,
+          user: updatedUser
         });
       });
     })
     .catch(err => {
       res.status(404).json({
         ok: false,
-        error: err,
+        error: err
       });
     });
 });
 
-/* DELETE user. */
-router.delete('/:id', (req, res, next) => {
+/* SHOW user. */
+router.get("/:id", tokenVerification, (req, res, next) => {
   User.findById(req.params.id)
-    .then(deletedUser => {
-      deletedUser.destroy();
+
+    .then(findedUser => {
+      delete findedUser.dataValues.password;
       res.json({
         ok: true,
-        user: deletedUser,
+        user: findedUser
       });
     })
     .catch(err => {
       res.status(404).send({
         ok: false,
-        error: err,
+        error: err
+      });
+    });
+});
+
+/* DELETE user. */
+router.delete("/:id", (req, res, next) => {
+  User.findById(req.params.id)
+    .then(deletedUser => {
+      deletedUser.destroy();
+      res.json({
+        ok: true,
+        user: deletedUser
+      });
+    })
+    .catch(err => {
+      res.status(404).send({
+        ok: false,
+        error: err
       });
     });
 });
