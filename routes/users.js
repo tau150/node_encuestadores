@@ -3,12 +3,13 @@ var router = express.Router();
 const bcrypt = require("bcrypt");
 const { User, Role } = require("../models/index");
 const { tokenVerification } = require("../middlewares/auth");
+const { superAdminVerification } = require("../middlewares/superAdmin");
 
 /* GET users listing. */
 router.get("/", tokenVerification, (req, res, next) => {
-  return res.json({
-    usuario: req.user
-  });
+  // return res.json({
+  //   usuario: req.user
+  // });
   User.findAll({
     attributes: ["id", "name", "surname", "email"],
     include: [{ model: Role }]
@@ -28,7 +29,7 @@ router.get("/", tokenVerification, (req, res, next) => {
 });
 
 /* POST user. */
-router.post("/", (req, res, next) => {
+router.post("/", tokenVerification, (req, res, next) => {
   let body = req.body;
 
   let password = bcrypt.hashSync("123", 10);
@@ -59,7 +60,7 @@ router.post("/", (req, res, next) => {
 });
 
 /* PUT user. */
-router.put("/:id", (req, res, next) => {
+router.put("/:id", tokenVerification, (req, res, next) => {
   User.update(
     {
       name: req.body.name,
@@ -104,21 +105,25 @@ router.get("/:id", tokenVerification, (req, res, next) => {
 });
 
 /* DELETE user. */
-router.delete("/:id", (req, res, next) => {
-  User.findById(req.params.id)
-    .then(deletedUser => {
-      deletedUser.destroy();
-      res.json({
-        ok: true,
-        user: deletedUser
+router.delete(
+  "/:id",
+  [tokenVerification, superAdminVerification],
+  (req, res, next) => {
+    User.findById(req.params.id)
+      .then(deletedUser => {
+        deletedUser.destroy();
+        res.json({
+          ok: true,
+          user: deletedUser
+        });
+      })
+      .catch(err => {
+        res.status(404).send({
+          ok: false,
+          error: err
+        });
       });
-    })
-    .catch(err => {
-      res.status(404).send({
-        ok: false,
-        error: err
-      });
-    });
-});
+  }
+);
 
 module.exports = router;
