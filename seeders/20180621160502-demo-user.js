@@ -1,6 +1,9 @@
 'use strict';
 
 const faker = require('faker');
+const bcrypt = require('bcrypt');
+
+bcrypt.hashSync('123', 10);
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -23,7 +26,7 @@ module.exports = {
           name: faker.name.firstName(),
           surname: faker.name.lastName(),
           email: faker.internet.email(),
-          password: faker.internet.password(),
+          password: bcrypt.hashSync('123', 10),
           role_id: 1,
           img: faker.image.avatar(),
           createdAt: new Date(),
@@ -36,7 +39,7 @@ module.exports = {
         name: 'santi',
         surname: 'nunez',
         email: 'tau150@hotmail.com',
-        password: '123',
+        password: bcrypt.hashSync('123', 10),
         role_id: 1,
         img: faker.image.avatar(),
         createdAt: new Date(),
