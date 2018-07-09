@@ -8,17 +8,20 @@ module.exports = (sequelize, DataTypes) => {
         required: true,
       },
       description: {
-        type: DataTypes.TEXT,,
+        type: DataTypes.TEXT,
         set(val) {
           this.setDataValue('surname', val[0].toUpperCase() + val.slice(1));
         },
-      }
+      },
+      deletedAt: {
+        allowNull: true,
+        type: DataTypes.DATE,
+      },
     },
-    {}
+    { paranoid: true }
   );
   Poll.associate = function(models) {
     // associations can be defined here
-    Poll.hasMany(model.User);
   };
   return Poll;
 };
