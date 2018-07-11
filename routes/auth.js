@@ -1,11 +1,11 @@
-var express = require('express');
+var express = require("express");
 var router = express.Router();
-require('dotenv').config();
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-const { User, Role } = require('../models/index');
-const { sendRecoverEmail } = require('../utils/email-util');
-const { tokenVerification } = require('../middlewares/auth');
+require("dotenv").config();
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+const { User, Role } = require("../models/index");
+const { sendRecoverEmail } = require("../utils/email-util");
+const { tokenVerification } = require("../middlewares/auth");
 
 /* POST  - login user */
 
@@ -59,29 +59,29 @@ const { tokenVerification } = require('../middlewares/auth');
 //     });
 // });
 
-router.post('/login', async function(req, res, next) {
+router.post("/login", async function(req, res, next) {
   let body = req.body;
 
   try {
     const userDb = await User.findOne({
-      where: { email: body.email },
+      where: { email: body.email }
     });
 
     if (!userDb) {
-      throw new Error('Usuario y/o contraseña incorrectos');
+      throw new Error("Usuario y/o contraseña incorrectos");
     }
     if (!bcrypt.compareSync(body.password, userDb.password)) {
-      throw new Error('Usuario y/o contraseña incorrectos');
+      throw new Error("Usuario y/o contraseña incorrectos");
     }
     delete userDb.dataValues.password;
 
     let token = jwt.sign(
       {
-        user: userDb,
+        user: userDb
       },
       // process.env.TOKEN_SEED,
 
-      '31743011.9013.TAU150', /// VER DE CAMBIAR ESTO POR UNA VARIABLE DE ENTORNO !!!
+      "31743011.9013.TAU150", /// VER DE CAMBIAR ESTO POR UNA VARIABLE DE ENTORNO !!!
       { expiresIn: 3600000 }
     );
 
@@ -89,12 +89,12 @@ router.post('/login', async function(req, res, next) {
       ok: true,
       user: userDb,
       expiresIn: 3600000,
-      token,
+      token
     });
   } catch (e) {
     return res.status(400).send({
       ok: false,
-      error: e.message,
+      error: e.message
     });
   }
 
@@ -200,16 +200,16 @@ router.post('/login', async function(req, res, next) {
 //   });
 // });
 
-router.post('/recover', async function(req, res, next) {
+router.post("/recover", async function(req, res, next) {
   let body = req.body;
 
   try {
     const userDb = await User.findOne({
-      where: { email: body.email },
+      where: { email: body.email }
     });
 
     if (!userDb) {
-      throw new Error('Usuario incorrecto');
+      throw new Error("Usuario incorrecto");
     }
 
     let password = Math.random()
@@ -220,22 +220,30 @@ router.post('/recover', async function(req, res, next) {
 
     await User.update(
       {
-        password: encriptedPassword,
+        password: encriptedPassword
       },
       { returning: true, where: { email: body.email } }
     );
 
     const updatedUser = await User.findById(req.params.id);
-    sendRecoverEmail('tau150@hotmail.com', password);
+
+    try {
+      const emailSent = await sendRecoverEmail("tau150@hotmail.com", password);
+    } catch (e) {
+      return res.status(400).json({
+        ok: false,
+        error: e.message
+      });
+    }
 
     res.json({
       ok: true,
-      user: updatedUser,
+      user: updatedUser
     });
   } catch (e) {
     res.status(404).json({
       ok: false,
-      error: e.message,
+      error: e.message
     });
   }
 });
@@ -283,7 +291,7 @@ router.post('/recover', async function(req, res, next) {
 //     });
 // });
 
-router.post('/changePassword', async function(req, res, next) {
+router.post("/changePassword", async function(req, res, next) {
   let body = req.body.user;
   let email = body.email;
   let password = body.password;
@@ -293,32 +301,32 @@ router.post('/changePassword', async function(req, res, next) {
 
   try {
     let userDB = await User.findOne({
-      where: { email: body.email },
+      where: { email: body.email }
     });
 
     if (!bcrypt.compareSync(password, userDB.password)) {
-      throw new Error('La contraseña antigua proporcionada no es correcta');
+      throw new Error("La contraseña antigua proporcionada no es correcta");
     }
 
     const updatedUser = await User.update(
       {
-        password: encriptedPassword,
+        password: encriptedPassword
       },
       { returning: true, where: { email: email } }
     );
 
     if (!updatedUser) {
-      throw new Error('Hubo un error, intente mas tarde');
+      throw new Error("Hubo un error, intente mas tarde");
     }
 
     res.json({
       ok: true,
-      user: updatedUser,
+      user: updatedUser
     });
   } catch (e) {
     res.status(404).json({
       ok: false,
-      error: e.message,
+      error: e.message
     });
   }
 });

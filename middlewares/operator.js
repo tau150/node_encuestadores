@@ -1,7 +1,7 @@
-let superAdminVerification = (req, res, next) => {
+let operatorVerification = (req, res, next) => {
   let token = req.get("Authorization");
-
-  if (req.user.role_id !== 1) {
+  console.log(req.user.role_id);
+  if (req.user.role_id > 2) {
     return res.status(401).json({
       ok: false,
       err: "No tiene permisos suficientes para esta acción"
@@ -12,5 +12,5 @@ let superAdminVerification = (req, res, next) => {
 };
 
 module.exports = {
-  superAdminVerification
+  operatorVerification
 };
