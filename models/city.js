@@ -27,6 +27,18 @@ module.exports = (sequelize, DataTypes) => {
   );
   City.associate = function(models) {
     // associations can be defined here
+
+    // City.belongsToMany(models.CityPollster, {
+    //   through: "citypollsters",
+    //   as: "cities_pollsters",
+    //   foreignKey: "id"
+    // });
+
+    City.belongsToMany(models.Pollster, {
+      as: "cities_pollsters",
+      through: "citypollsters",
+      foreignKey: "city_id"
+    });
   };
   return City;
 };

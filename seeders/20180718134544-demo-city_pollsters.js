@@ -1,13 +1,5 @@
 "use strict";
 
-const cities = require("../utils/cities");
-
-const processedCities = cities.cities.map(city => {
-  city.createdAt = new Date();
-  city.updatedAt = new Date();
-  return city;
-});
-
 module.exports = {
   up: (queryInterface, Sequelize) => {
     /*
@@ -20,7 +12,21 @@ module.exports = {
         isBetaMember: false
       }], {});
     */
-    return queryInterface.bulkInsert("Cities", processedCities);
+    let cityPollsters = [];
+
+    const seeder = () => {
+      for (var i = 0; i <= 50; i++) {
+        cityPollsters.push({
+          city_id: Math.floor(Math.random() * (999 - 1 + 1)) + 1,
+          pollster_id: Math.floor(Math.random() * (50 - 1 + 1)) + 1,
+          createdAt: new Date(),
+          updatedAt: new Date()
+        });
+      }
+    };
+
+    seeder();
+    return queryInterface.bulkInsert("CityPollsters", cityPollsters, {});
   },
 
   down: (queryInterface, Sequelize) => {
@@ -32,6 +38,6 @@ module.exports = {
       return queryInterface.bulkDelete('Person', null, {});
     */
 
-    return queryInterface.bulkDelete("Cities", null, {});
+    return queryInterface.bulkDelete("CityPollsters", null, {});
   }
 };

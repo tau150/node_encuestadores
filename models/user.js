@@ -14,14 +14,16 @@ module.exports = (sequelize, DataTypes) => {
         require: true,
         type: DataTypes.STRING,
         set(val) {
-          this.setDataValue('name', val[0].toUpperCase() + val.slice(1));
+          const lowCase = val.toLowerCase() ;
+          this.setDataValue('name', lowCase[0].toUpperCase() + lowCase.slice(1));
         },
       },
       surname: {
         require: true,
         type: DataTypes.STRING,
         set(val) {
-          this.setDataValue('surname', val[0].toUpperCase() + val.slice(1));
+          const lowCase = val.toLowerCase() ;
+          this.setDataValue('surname',  lowCase[0].toUpperCase() + lowCase.slice(1));
         },
       },
       email: {

@@ -1,5 +1,9 @@
 const emailConfig = require("../config/email-config");
 const mailgun = require("mailgun-js")(emailConfig());
+const path = require("path");
+const filename = path.join(__dirname, "../public/images/pap-inst.png");
+
+console.log(filename);
 
 exports.sendEmail = async (recipient, password) => {
   var data = {
@@ -7,9 +11,11 @@ exports.sendEmail = async (recipient, password) => {
       "Dirección Pcial. Estadística <no-responder@estadistica.ec.gba.gov.ar>",
     to: "tau150@hotmail.com",
     subject: "Registro exitoso",
-    html: `<html> <h3> Fuiste registrado con éxito </h3> <p>Podés ingresar al sistema con tu email y el siguiente password <strong> ${password} </strong>, te aconsejamos cambiarlo para mayor seguridad.</p>
-    <div><img src="/images/pap-inst.png" style="width: 100%;"/></div>
-    </html>`
+    html: `<html> <h3> Fuiste registrado con éxito  </h3><br> <p>Podés ingresar al sistema con tu email y el siguiente password <strong> ${password} </strong>, te aconsejamos cambiarlo para mayor seguridad.</p>
+    <br><br><br>
+    <div><img src="cid:pap-inst.png" style="width: 100%;"/></div>
+    </html>`,
+    inline: filename
   };
 
   mailgun.messages().send(data, err => {
@@ -29,7 +35,8 @@ exports.sendRecoverEmail = async (recipient, password) => {
         "Dirección Pcial. Estadística <no-responder@estadistica.ec.gba.gov.ar>",
       to: "tau150@hotmail.com",
       subject: "Reseteo de clave",
-      html: `<html> <h3> Generación de Nueva Clave </h3> <p> El proceso de reseteo fue realizado con éxito, podés ingresar con tu email y la siguiente contraseña <strong> ${password} </strong>, te aconsejamos cambiarlo para mayor seguridad.</p></html>`
+      html: `<html> <h3> Generación de Nueva Clave </h3><br> <p> El proceso de reseteo fue realizado con éxito, podés ingresar con tu email y la siguiente contraseña <strong> ${password} </strong>, te aconsejamos cambiarlo para mayor seguridad.</p> <br><br><br>  <div><img src="cid:pap-inst.png" style="width: 100%;"/></div> </html>`,
+      inline: filename
     };
 
     mailgun.messages().send(data, err => {
