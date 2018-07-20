@@ -5,13 +5,17 @@ module.exports = (sequelize, DataTypes) => {
 
     {
       id: {
-        allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: DataTypes.INTEGER
       },
 
-      city_id: DataTypes.INTEGER
+      city_id: {
+        type: DataTypes.INTEGER
+      },
+      pollster_id: {
+        type: DataTypes.INTEGER
+      }
     },
     {}
   );

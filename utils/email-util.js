@@ -3,8 +3,6 @@ const mailgun = require("mailgun-js")(emailConfig());
 const path = require("path");
 const filename = path.join(__dirname, "../public/images/pap-inst.png");
 
-console.log(filename);
-
 exports.sendEmail = async (recipient, password) => {
   var data = {
     from:

@@ -35,7 +35,7 @@ module.exports = (sequelize, DataTypes) => {
     // });
 
     City.belongsToMany(models.Pollster, {
-      as: "cities_pollsters",
+      as: "pollsters",
       through: "citypollsters",
       foreignKey: "city_id"
     });

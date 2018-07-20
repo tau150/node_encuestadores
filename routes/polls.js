@@ -33,7 +33,7 @@ router.post(
   [tokenVerification, operatorVerification],
   async (req, res, next) => {
     let body = req.body;
-    console.log(body.description);
+
 
     const poll = Poll.build({
       name: req.body.name,
@@ -80,7 +80,6 @@ router.put(
   }
 );
 
-/* SHOW user. */
 router.get(
   "/:id",
   [tokenVerification, operatorVerification],
@@ -108,6 +107,8 @@ router.delete(
   [tokenVerification, operatorVerification],
   async (req, res, next) => {
     try {
+
+
       const pollToDelete = await Poll.findById(req.params.id);
 
       pollToDelete.destroy();

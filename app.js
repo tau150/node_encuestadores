@@ -11,6 +11,9 @@ var usersRouter = require("./routes/users");
 var authRouter = require("./routes/auth");
 var pollsRouter = require("./routes/polls");
 var pollstersRouter = require("./routes/pollsters");
+var citiessRouter = require("./routes/cities");
+var multer = require("multer");
+var upload = multer({ dest: "uploads/" });
 
 var app = express();
 app.use(cors());
@@ -30,6 +33,7 @@ app.use("/users", usersRouter);
 app.use("/auth", authRouter);
 app.use("/polls", pollsRouter);
 app.use("/pollsters", pollstersRouter);
+app.use("/cities", citiessRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

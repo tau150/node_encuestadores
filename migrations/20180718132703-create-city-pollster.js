@@ -9,19 +9,15 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       city_id: {
-        type: Sequelize.INTEGER,
-        allowNull: false
+        type: Sequelize.INTEGER
       },
       pollster_id: {
-        type: Sequelize.INTEGER,
-        allowNull: false
+        type: Sequelize.INTEGER
       },
       createdAt: {
-        allowNull: false,
         type: Sequelize.DATE
       },
       updatedAt: {
-        allowNull: false,
         type: Sequelize.DATE
       }
     });
