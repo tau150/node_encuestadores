@@ -27,6 +27,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
+// http://localhost:3000/images/profile/31743011.jpeg
 
 app.use("/", indexRouter);
 app.use("/users", usersRouter);

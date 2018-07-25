@@ -22,7 +22,8 @@ module.exports = {
       },
       dni: {
         type: Sequelize.INTEGER,
-        allowNull: false
+        allowNull: false,
+        unique: true
       },
       poll_id: {
         type: Sequelize.INTEGER

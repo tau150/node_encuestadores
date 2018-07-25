@@ -150,7 +150,6 @@ router.put(
   }
 );
 
-/* SHOW user. */
 router.get(
   "/:id",
   [tokenVerification, superAdminVerification],
@@ -172,28 +171,6 @@ router.get(
       });
   }
 );
-
-/* DELETE user. */
-// router.delete(
-//   '/:id',
-//   [tokenVerification, superAdminVerification],
-//   (req, res, next) => {
-//     User.findById(req.params.id)
-//       .then(deletedUser => {
-//         deletedUser.destroy();
-//         res.json({
-//           ok: true,
-//           user: deletedUser,
-//         });
-//       })
-//       .catch(err => {
-//         res.status(404).send({
-//           ok: false,
-//           error: err,
-//         });
-//       });
-//   }
-// );
 
 router.delete(
   "/:id",
