@@ -221,4 +221,37 @@ router.delete(
   }
 );
 
+router.get(
+  "/:id",
+  [tokenVerification, operatorVerification],
+  async (req, res, next) => {
+    try {
+      const pollster = await Pollster.findById(req.params.id, {
+        include: [
+          {
+            model: City,
+            as: "cities",
+            through: {
+              attributes: []
+            }
+          },
+          {
+            model: Poll
+          }
+        ]
+      });
+      console.log("aca", pollster);
+      res.json({
+        ok: true,
+        pollster: pollster
+      });
+    } catch (e) {
+      res.status(404).send({
+        ok: false,
+        error: "Ocurrio un error, no se pudo eliminar el registro"
+      });
+    }
+  }
+);
+
 module.exports = router;

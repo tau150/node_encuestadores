@@ -14,9 +14,14 @@ var pollstersRouter = require("./routes/pollsters");
 var citiessRouter = require("./routes/cities");
 var multer = require("multer");
 var upload = multer({ dest: "uploads/" });
+const helmet = require('helmet')
+
+
+
 
 var app = express();
 app.use(cors());
+app.use(helmet())
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
@@ -27,7 +32,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
-// http://localhost:3000/images/profile/31743011.jpeg
 
 app.use("/", indexRouter);
 app.use("/users", usersRouter);

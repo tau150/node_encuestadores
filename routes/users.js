@@ -6,27 +6,6 @@ const { tokenVerification } = require("../middlewares/auth");
 const { superAdminVerification } = require("../middlewares/superAdmin");
 const { sendEmail } = require("../utils/email-util");
 
-/* GET users listing. */
-// router.get('/', tokenVerification, (req, res, next) => {
-//   User.findAll({
-//     attributes: ['id', 'name', 'surname', 'email', 'createdAt'],
-//     order: [['createdAt', 'DESC']],
-//     include: [{ model: Role }],
-//   })
-//     .then(users => {
-//       res.json({
-//         ok: true,
-//         users,
-//       });
-//     })
-//     .catch(err => {
-//       res.status(400).send({
-//         ok: false,
-//         err: 'hubo error',
-//       });
-//     });
-// });
-
 router.get(
   "/",
   [tokenVerification, superAdminVerification],
@@ -55,8 +34,6 @@ router.post(
   "/",
   [tokenVerification, superAdminVerification],
   async (req, res, next) => {
-    let body = req.body;
-
     let password = Math.random()
       .toString(36)
       .slice(2);
@@ -77,7 +54,14 @@ router.post(
       delete savedUser.dataValues.password;
 
       try {
-        const emailSent = await sendEmail("tau150@hotmail.com", password);
+        let recipient;
+        if (process.env.NODE_ENV === "development") {
+          recipient = "tau150@hotmail.com";
+        } else {
+          recipient = savedUser.email;
+        }
+
+        await sendEmail(recipient, password);
       } catch (e) {
         return res.status(400).json({
           ok: false,
@@ -97,32 +81,6 @@ router.post(
     }
   }
 );
-
-/* PUT user. */
-// router.put('/:id', tokenVerification, (req, res, next) => {
-//   User.update(
-//     {
-//       name: req.body.name,
-//       surname: req.body.surname,
-//       role_id: req.body.role_id,
-//     },
-//     { returning: true, where: { id: req.params.id } }
-//   )
-//     .then(result => {
-//       User.findById(req.params.id).then(updatedUser => {
-//         res.json({
-//           ok: true,
-//           user: updatedUser,
-//         });
-//       });
-//     })
-//     .catch(err => {
-//       res.status(404).json({
-//         ok: false,
-//         error: err,
-//       });
-//     });
-// });
 
 router.put(
   "/:id",

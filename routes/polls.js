@@ -34,7 +34,6 @@ router.post(
   async (req, res, next) => {
     let body = req.body;
 
-
     const poll = Poll.build({
       name: req.body.name,
       description: req.body.description
@@ -107,9 +106,15 @@ router.delete(
   [tokenVerification, operatorVerification],
   async (req, res, next) => {
     try {
-
-
       const pollToDelete = await Poll.findById(req.params.id);
+
+      const users = await pollToDelete.getPollsters();
+
+      if (users) {
+        throw new Error(
+          "No es posible eliminar porque tiene encuestadores asociados"
+        );
+      }
 
       pollToDelete.destroy();
       res.json({
@@ -119,7 +124,7 @@ router.delete(
     } catch (e) {
       res.status(404).send({
         ok: false,
-        error: "Ocurrio un error, no se pudo eliminar el registro"
+        error: e.message
       });
     }
   }

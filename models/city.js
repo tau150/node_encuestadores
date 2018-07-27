@@ -12,7 +12,13 @@ module.exports = (sequelize, DataTypes) => {
       code: DataTypes.STRING,
       department: DataTypes.STRING,
       zip: DataTypes.STRING,
-      city: DataTypes.STRING,
+      city: {
+        type: DataTypes.STRING,
+        get() {
+          const city = this.getDataValue("city").toLowerCase();
+          return city;
+        }
+      },
 
       createdAt: {
         allowNull: false,
