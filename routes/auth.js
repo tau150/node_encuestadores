@@ -29,8 +29,8 @@ router.post("/login", async function(req, res, next) {
       {
         user: userDb
       },
-      process.env.SEED_TOKEN,
-      { expiresIn: process.env.EXPIRE_TOKEN }
+      "31743011.9013.TAU150",
+      { expiresIn: 360000 }
     );
 
     return res.json({
