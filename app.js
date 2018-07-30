@@ -14,14 +14,11 @@ var pollstersRouter = require("./routes/pollsters");
 var citiessRouter = require("./routes/cities");
 var multer = require("multer");
 var upload = multer({ dest: "uploads/" });
-const helmet = require('helmet')
-
-
-
+const helmet = require("helmet");
 
 var app = express();
 app.use(cors());
-app.use(helmet())
+app.use(helmet());
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
@@ -56,9 +53,8 @@ app.use(function(err, req, res, next) {
   res.render("error");
 });
 
-
-
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 3000;
 app.listen(port);
 
+console.log("app listen at port " + port);
 module.exports = app;
