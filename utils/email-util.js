@@ -1,4 +1,6 @@
-const emailConfig = require("../config/email-config");
+// const emailConfig = require("../config/email-config");
+const emailConfig = require("../config/config-email");
+
 const mailgun = require("mailgun-js")(emailConfig());
 const path = require("path");
 const filename = path.join(__dirname, "../public/images/pap-inst.png");
