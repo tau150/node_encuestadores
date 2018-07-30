@@ -75,12 +75,12 @@ router.post("/recover", async function(req, res, next) {
     const updatedUser = await User.findById(req.params.id);
 
     try {
-      let recipient;
-      if (process.env.NODE_ENV === "development") {
-        recipient = "tau150@hotmail.com";
-      } else {
-        recipient = updatedUser.email;
-      }
+      const recipient = updatedUser.email;
+      // if (process.env.NODE_ENV === "development") {
+      //   recipient = "tau150@hotmail.com";
+      // } else {
+      //   recipient = updatedUser.email;
+      // }
       await sendRecoverEmail(recipient, password);
     } catch (e) {
       return res.status(400).json({
