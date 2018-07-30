@@ -54,12 +54,12 @@ router.post(
       delete savedUser.dataValues.password;
 
       try {
-        let recipient;
-        if (process.env.NODE_ENV === "development") {
-          recipient = "tau150@hotmail.com";
-        } else {
-          recipient = savedUser.dataValues.email;
-        }
+        let recipient = savedUser.dataValues.email;
+        // if (process.env.NODE_ENV === "development") {
+        //   recipient = "tau150@hotmail.com";
+        // } else {
+        //   recipient = savedUser.dataValues.email;
+        // }
 
         await sendEmail(recipient, password);
       } catch (e) {
