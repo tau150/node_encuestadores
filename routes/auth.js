@@ -29,14 +29,14 @@ router.post("/login", async function(req, res, next) {
       {
         user: userDb
       },
-      "31743011.9013.TAU150",
-      { expiresIn: 360000 }
+      process.env.SEED_TOKEN,
+      { expiresIn: process.env.EXPIRE_TOKEN }
     );
 
     return res.json({
       ok: true,
       user: userDb,
-      expiresIn: 3600000,
+      expiresIn: process.env.EXPIRE_TOKEN,
       token
     });
   } catch (e) {
@@ -75,12 +75,12 @@ router.post("/recover", async function(req, res, next) {
     const updatedUser = await User.findById(req.params.id);
 
     try {
-      const recipient = updatedUser.email;
-      // if (process.env.NODE_ENV === "development") {
-      //   recipient = "tau150@hotmail.com";
-      // } else {
-      //   recipient = updatedUser.email;
-      // }
+      let recipient;
+      if (process.env.NODE_ENV === "development") {
+        recipient = "tau150@hotmail.com";
+      } else {
+        recipient = updatedUser.email;
+      }
       await sendRecoverEmail(recipient, password);
     } catch (e) {
       return res.status(400).json({

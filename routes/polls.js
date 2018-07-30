@@ -68,7 +68,7 @@ router.put(
       );
       res.json({
         ok: true,
-        user: updatedPoll
+        poll: updatedPoll
       });
     } catch (e) {
       res.status(404).json({
@@ -82,22 +82,20 @@ router.put(
 router.get(
   "/:id",
   [tokenVerification, operatorVerification],
-  (req, res, next) => {
-    User.findById(req.params.id)
-
-      .then(findedUser => {
-        delete findedUser.dataValues.password;
-        res.json({
-          ok: true,
-          user: findedUser
-        });
-      })
-      .catch(err => {
-        res.status(404).send({
-          ok: false,
-          error: err
-        });
+  async (req, res, next) => {
+    try {
+      const findedPoll = await Poll.findById(req.params.id);
+      console.log(findedPoll);
+      res.json({
+        ok: true,
+        poll: findedPoll
       });
+    } catch (e) {
+      res.status(404).json({
+        ok: false,
+        error: "Ocurrió un error, no se pudo actualizar el registro"
+      });
+    }
   }
 );
 
