@@ -1,4 +1,8 @@
-const emailConfig = require("../config/email-config");
+const emailConfig =
+  process.env.NODE_ENV === development
+    ? require("../config/email-config")
+    : require("../config-email");
+// const emailConfig = require("../config/email-config");
 // const emailConfig = require("../config-email");
 
 const mailgun = require("mailgun-js")(emailConfig());
