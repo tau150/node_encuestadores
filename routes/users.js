@@ -4,6 +4,7 @@ const bcrypt = require("bcrypt");
 const { User, Role } = require("../models/index");
 const { tokenVerification } = require("../middlewares/auth");
 const { superAdminVerification } = require("../middlewares/superAdmin");
+const { operatorVerification } = require("../middlewares/operator");
 const { sendEmail } = require("../utils/email-util");
 
 router.get(
@@ -55,11 +56,6 @@ router.post(
 
       try {
         let recipient = savedUser.dataValues.email;
-        // if (process.env.NODE_ENV === "development") {
-        //   recipient = "tau150@hotmail.com";
-        // } else {
-        //   recipient = savedUser.dataValues.email;
-        // }
 
         await sendEmail(recipient, password);
       } catch (e) {
@@ -110,7 +106,7 @@ router.put(
 
 router.get(
   "/:id",
-  [tokenVerification, superAdminVerification],
+  [tokenVerification, operatorVerification],
   (req, res, next) => {
     User.findById(req.params.id)
 

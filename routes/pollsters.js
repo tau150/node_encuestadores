@@ -20,48 +20,44 @@ var storage = multer.diskStorage({
 
 var upload = multer({ storage: storage });
 
-router.get(
-  "/",
-  [tokenVerification, operatorVerification],
-  async (req, res, next) => {
-    try {
-      const pollsters = await Pollster.findAll({
-        attributes: [
-          "id",
-          "name",
-          "surname",
-          "dni",
-          "jobPosition",
-          "active",
-          "img",
-          "createdAt"
-        ],
-        order: [["createdAt", "DESC"]],
-        include: [
-          {
-            model: City,
-            as: "cities",
-            through: {
-              attributes: []
-            }
-          },
-          {
-            model: Poll
+router.get("/", [tokenVerification], async (req, res, next) => {
+  try {
+    const pollsters = await Pollster.findAll({
+      attributes: [
+        "id",
+        "name",
+        "surname",
+        "dni",
+        "jobPosition",
+        "active",
+        "img",
+        "createdAt"
+      ],
+      order: [["createdAt", "DESC"]],
+      include: [
+        {
+          model: City,
+          as: "cities",
+          through: {
+            attributes: []
           }
-        ]
-      });
-      res.json({
-        ok: true,
-        pollsters
-      });
-    } catch (e) {
-      return res.status(500).send({
-        ok: false,
-        err: e.message
-      });
-    }
+        },
+        {
+          model: Poll
+        }
+      ]
+    });
+    res.json({
+      ok: true,
+      pollsters
+    });
+  } catch (e) {
+    return res.status(500).send({
+      ok: false,
+      err: e.message
+    });
   }
-);
+});
 
 router.delete(
   "/:id",
@@ -158,8 +154,6 @@ router.put(
         req.body.dni
       }.${extension}`;
     }
-
-    console.log(req.file);
 
     try {
       const updatedPollster = await Pollster.update(
